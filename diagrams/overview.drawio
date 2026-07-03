@@ -1,0 +1,22 @@
+<mxfile host="65bd71144e">
+    <diagram id="fgYEHI2ZK-SpYLvsBxpQ" name="Page-1">
+        <mxGraphModel dx="476" dy="499" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="2" value="Redis Server" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="230" y="210" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="3" value="FastAPI&lt;br&gt;Server" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="20" y="210" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="4" value="PostgresSQL&lt;br&gt;Database" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="230" y="430" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="13" value="Job worker" style="shape=offPageConnector;whiteSpace=wrap;html=1;rotation=270;size=0.23214285714285715;labelPosition=center;verticalLabelPosition=middle;align=center;verticalAlign=middle;spacing=2;" vertex="1" parent="1">
+                    <mxGeometry x="510" y="320" width="55" height="140" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

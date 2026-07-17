@@ -1,6 +1,6 @@
-def main():
-    print("Hello from backend!")
+from core.config import settings
 
-
-if __name__ == "__main__":
-    main()
+print(f"App: {settings.app_name}")
+print(f"Debug: {settings.debug}")
+print(f"Host: {settings.host}")
+print(f"Port: {settings.port}")

@@ -3,3 +3,7 @@ assets/hide/
 
 # Virtual Environment
 backend/.venv/
+backend/.env
+
+__pycache__/
+*.pyc

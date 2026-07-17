@@ -1,2 +1,5 @@
 # assets
 assets/hide/
+
+# Virtual Environment
+backend/.venv/

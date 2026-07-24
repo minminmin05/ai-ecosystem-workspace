@@ -8,3 +8,7 @@ backend/.env
 # Python cache
 backend/__pycache__/
 backend/*.pyc
+
+# Logs
+backend/logs/
+sandbox/minio/downloaded_*

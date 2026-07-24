@@ -1,3 +1,9 @@
+x-logging: &default-logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "3"
+
 services:
   postgres:
     image: postgres:17
@@ -11,6 +17,7 @@ services:
       - "5432:5432"
     volumes:
       - postgresql-data:/var/lib/postgresql/data
+    logging: *default-logging
 
   redis:
     image: redis:8.8.0-alpine
@@ -27,6 +34,7 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    logging: *default-logging
 
   label-studio:
     image: heartexlabs/label-studio:latest
@@ -45,8 +53,30 @@ services:
       - label-studio-data:/label-studio/data
     depends_on:
       - postgres
+    logging: *default-logging
+
+  minio:
+    image: minio/minio:latest
+    container_name: minio
+    restart: unless-stopped
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio-data:/data
+    command: server /data --console-address ":9001"
+    healthcheck:
+      test: [ "CMD", "mc", "ready", "local" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    logging: *default-logging
 
 volumes:
   postgresql-data:
   redis-data:
   label-studio-data:
+  minio-data:

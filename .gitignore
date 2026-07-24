@@ -12,3 +12,6 @@ backend/*.pyc
 # Logs
 backend/logs/
 sandbox/minio/downloaded_*
+
+# Reports
+*.docx

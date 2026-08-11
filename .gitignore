@@ -6,8 +6,8 @@ backend/.venv/
 backend/.env
 
 # Python cache
-backend/__pycache__/
-backend/*.pyc
+**/__pycache__/
+*.pyc
 
 # Logs
 backend/logs/

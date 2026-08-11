@@ -17,11 +17,30 @@ class Settings(BaseSettings):
     minio_bucket: str = "ai-ecosystem"
     minio_secure: bool = False
 
+    postgres_user: str = "postgres"
+    postgres_password: str = "password"
+    postgres_host: str = "localhost"
+    postgres_port: int = 5432
+    postgres_db: str = "ai_ecosystem"
+
+    labelstudio_url: str = "http://localhost:8080"
+    labelstudio_api_key: str = ""
+
+    redis_host: str = "localhost"
+    redis_port: int = 6379
+
     model_config = SettingsConfigDict(
         env_file=str(BASE_DIR / ".env"),
         env_file_encoding="utf-8",
         case_sensitive=False,
     )
+
+    @property
+    def database_url(self) -> str:
+        return (
+            f"postgresql+psycopg2://{self.postgres_user}:{self.postgres_password}"
+            f"@{self.postgres_host}:{self.postgres_port}/{self.postgres_db}"
+        )
 
 
 settings = Settings()

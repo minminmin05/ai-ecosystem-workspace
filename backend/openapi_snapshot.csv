@@ -1,0 +1,15 @@
+﻿method,path,tags,summary,description,request_body,responses,deprecated
+GET,/students,students,List all students,,,200 (application/json: array[StudentOut]),False
+POST,/students,students,Create a student,,application/json: StudentCreate,201 (application/json: StudentOut); 409; 422 (application/json: HTTPValidationError),False
+GET,/students/{student_id},students,Get a student by id,,,200 (application/json: StudentOut); 404; 422 (application/json: HTTPValidationError),False
+PATCH,/students/{student_id},students,Update a student,,application/json: StudentUpdate,200 (application/json: StudentOut); 404; 409; 422 (application/json: HTTPValidationError),False
+DELETE,/students/{student_id},students,Delete a student,,,204; 404; 422 (application/json: HTTPValidationError),False
+POST,/storage/objects/{object_name},storage,Upload a file to MinIO,,multipart/form-data: Body_upload_object_storage_objects__object_name__post,201 (application/json: ObjectOut); 500; 422 (application/json: HTTPValidationError),False
+GET,/storage/objects/{object_name},storage,Download a file from MinIO,,,200 (application/octet-stream); 404; 422 (application/json: HTTPValidationError),False
+DELETE,/storage/objects/{object_name},storage,Delete a file from MinIO,,,204; 404; 422 (application/json: HTTPValidationError),False
+GET,/storage/objects,storage,List all objects in the bucket,,,200 (application/json: array[ObjectOut]),False
+GET,/annotations/projects,annotations,List all Label Studio projects,,,200 (application/json: array[ProjectOut]),False
+GET,/annotations/projects/{project_id}/tasks,annotations,List tasks in a Label Studio project,,,200 (application/json: array[TaskOut]); 404; 422 (application/json: HTTPValidationError),False
+POST,/jobs,jobs,Enqueue a background job,,application/json: JobEnqueueRequest,202 (application/json: JobEnqueueResponse); 409; 422 (application/json: HTTPValidationError),False
+GET,/jobs/{job_id},jobs,Check the status/result of a background job,,,200 (application/json: JobStatusOut); 404; 422 (application/json: HTTPValidationError),False
+GET,/health,health,Health check,,,200 (application/json: object),False

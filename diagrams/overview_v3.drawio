@@ -1,0 +1,134 @@
+<mxfile host="65bd71144e">
+    <diagram id="sysOverviewV3" name="Page-1">
+        <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1150" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+
+                <!-- ===== Docker boundary (background) ===== -->
+                <mxCell id="docker" value="Docker (docker compose)" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;align=left;spacingLeft=10;spacingTop=6;fillColor=#FFF9C4;strokeColor=#BFA600;fontSize=14;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="20" y="140" width="1560" height="800" as="geometry"/>
+                </mxCell>
+
+                <!-- ===== Actors / external ===== -->
+                <mxCell id="enduser" value="End User" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E1D5E7;strokeColor=#9673A6;fontSize=14;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="30" width="140" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="admin" value="Admin" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E1D5E7;strokeColor=#9673A6;fontSize=14;" parent="1" vertex="1">
+                    <mxGeometry x="220" y="30" width="140" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="hf" value="Hugging Face Hub" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFE6CC;strokeColor=#D79B00;fontSize=14;" parent="1" vertex="1">
+                    <mxGeometry x="1400" y="30" width="160" height="50" as="geometry"/>
+                </mxCell>
+
+                <!-- ===== FastAPI container box ===== -->
+                <mxCell id="fastapi" value="FastAPI (container)" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;align=left;spacingLeft=10;spacingTop=6;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=13;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="60" y="200" width="1500" height="150" as="geometry"/>
+                </mxCell>
+                <mxCell id="dom_db" value="/students&lt;br&gt;db domain" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=12;" parent="1" vertex="1">
+                    <mxGeometry x="90" y="250" width="260" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="dom_ann" value="/annotations&lt;br&gt;annotations domain" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=12;" parent="1" vertex="1">
+                    <mxGeometry x="380" y="250" width="260" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="dom_jobs" value="/jobs&lt;br&gt;jobs domain" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=12;" parent="1" vertex="1">
+                    <mxGeometry x="670" y="250" width="260" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="dom_storage" value="/storage&lt;br&gt;storage domain" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=12;" parent="1" vertex="1">
+                    <mxGeometry x="960" y="250" width="260" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="dom_training" value="/training&lt;br&gt;training domain" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=12;" parent="1" vertex="1">
+                    <mxGeometry x="1250" y="250" width="260" height="80" as="geometry"/>
+                </mxCell>
+
+                <!-- ===== Data stores / services ===== -->
+                <mxCell id="postgres" value="PostgreSQL&lt;br&gt;ai_ecosystem" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#00F000;strokeColor=#005700;fontColor=#ffffff;fontSize=12;" parent="1" vertex="1">
+                    <mxGeometry x="90" y="440" width="180" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="labelstudio" value="Label Studio&lt;br&gt;(Annotation Platform)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=12;" parent="1" vertex="1">
+                    <mxGeometry x="380" y="450" width="220" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="redis" value="Redis" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#a20025;strokeColor=#6F0000;fontColor=#ffffff;fontSize=13;" parent="1" vertex="1">
+                    <mxGeometry x="700" y="440" width="160" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="minio" value="MinIO&lt;br&gt;Object Storage" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;fontSize=12;" parent="1" vertex="1">
+                    <mxGeometry x="1300" y="440" width="180" height="110" as="geometry"/>
+                </mxCell>
+
+                <!-- ===== Workers ===== -->
+                <mxCell id="jobworker" value="Job Worker&lt;br&gt;(generic, placeholder)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F5F5F5;strokeColor=#999999;fontColor=#999999;fontSize=12;dashed=1;opacity=70;" parent="1" vertex="1">
+                    <mxGeometry x="700" y="640" width="200" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="trainerworker" value="Trainer Worker&lt;br&gt;container, ใช้ GPU" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e6d0de;strokeColor=#996185;fontSize=13;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="1000" y="640" width="220" height="100" as="geometry"/>
+                </mxCell>
+
+                <!-- ===== Edges: actors -> FastAPI ===== -->
+                <mxCell id="e1" value="Request" style="edgeStyle=orthogonalEdgeStyle;html=1;fontSize=11;" edge="1" parent="1" source="enduser" target="fastapi">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e2" value="Management" style="edgeStyle=orthogonalEdgeStyle;html=1;fontSize=11;" edge="1" parent="1" source="admin" target="fastapi">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+
+                <!-- ===== Edges: HF -> training domain ===== -->
+                <mxCell id="e3" value="1) load_dataset()" style="edgeStyle=orthogonalEdgeStyle;html=1;fontSize=11;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="hf" target="dom_training">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+
+                <!-- ===== Edges: domains -> stores ===== -->
+                <mxCell id="e4" value="SQLAlchemy" style="edgeStyle=orthogonalEdgeStyle;html=1;fontSize=11;" edge="1" parent="1" source="dom_db" target="postgres">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e5" value="label_studio_sdk" style="edgeStyle=orthogonalEdgeStyle;html=1;fontSize=11;" edge="1" parent="1" source="dom_ann" target="labelstudio">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e6" value="enqueue_job()&lt;br&gt;queue: arq:queue" style="edgeStyle=orthogonalEdgeStyle;html=1;fontSize=11;" edge="1" parent="1" source="dom_jobs" target="redis">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e7" value="minio SDK&lt;br&gt;upload/download" style="edgeStyle=orthogonalEdgeStyle;html=1;fontSize=11;" edge="1" parent="1" source="dom_storage" target="minio">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e8" value="2) save_to_disk()&lt;br&gt;ผ่าน s3fs" style="edgeStyle=orthogonalEdgeStyle;html=1;fontSize=11;exitX=1;exitY=0.5;entryX=0.5;entryY=0;" edge="1" parent="1" source="dom_training" target="minio">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="1390" y="330"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="e9" value="3) enqueue_job()&lt;br&gt;queue: training_queue&lt;br&gt;start_at (optional)" style="edgeStyle=orthogonalEdgeStyle;html=1;fontSize=11;exitX=0;exitY=1;entryX=1;entryY=0.3;" edge="1" parent="1" source="dom_training" target="redis">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+
+                <!-- ===== Edges: Redis -> workers ===== -->
+                <mxCell id="e10" value="queue: arq:queue" style="edgeStyle=orthogonalEdgeStyle;html=1;fontSize=11;" edge="1" parent="1" source="redis" target="jobworker">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e11" value="queue: training_queue" style="edgeStyle=orthogonalEdgeStyle;html=1;fontSize=11;" edge="1" parent="1" source="redis" target="trainerworker">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+
+                <!-- ===== Edges: MinIO <-> Trainer Worker ===== -->
+                <mxCell id="e12" value="4) load_from_disk()&lt;br&gt;ผ่าน s3fs" style="edgeStyle=orthogonalEdgeStyle;html=1;fontSize=11;exitX=0.7;exitY=1;entryX=1;entryY=0.3;" edge="1" parent="1" source="minio" target="trainerworker">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e13" value="6) fput_object()&lt;br&gt;key: models/token-classification/model.tar.gz&lt;br&gt;+ bucket versioning เปิดอยู่" style="edgeStyle=orthogonalEdgeStyle;html=1;fontSize=11;exitX=1;exitY=0.5;entryX=0.3;entryY=1;" edge="1" parent="1" source="trainerworker" target="minio">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="1420" y="700"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="e13note" value="5) fine-tune distilbert-base-uncased&lt;br&gt;log ทุก 50 step → .log" style="text;html=1;align=center;verticalAlign=middle;fontSize=11;fontColor=#996185;" vertex="1" parent="1">
+                    <mxGeometry x="1000" y="750" width="220" height="40" as="geometry"/>
+                </mxCell>
+
+                <!-- ===== Edge: Label Studio -> Postgres ===== -->
+                <mxCell id="e14" value="Database Connection" style="edgeStyle=orthogonalEdgeStyle;html=1;fontSize=11;" edge="1" parent="1" source="labelstudio" target="postgres">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

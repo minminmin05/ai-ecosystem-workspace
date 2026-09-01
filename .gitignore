@@ -4,6 +4,7 @@ assets/hide/
 # Virtual Environment
 backend/.venv/
 backend/.env
+workers/trainer/.env
 
 # Python cache
 **/__pycache__/
@@ -11,6 +12,7 @@ backend/.env
 
 # Logs
 backend/logs/
+workers/trainer/logs/
 sandbox/minio/downloaded_*
 
 # Reports

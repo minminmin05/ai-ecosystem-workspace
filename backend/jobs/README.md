@@ -29,12 +29,25 @@ async def lifespan(app: FastAPI):
 
 ARQ เป็น async-native อยู่แล้ว (`create_pool`, `enqueue_job`, `Job.status()` ล้วนเป็น coroutine) จึงประกาศ route เป็น `async def` แล้ว `await` ตรงๆ ได้เลย ไม่ต้องพึ่ง threadpool เหมือน `db/`/`storage/`
 
+## กำหนดเวลาเริ่มงาน (`start_at`) และคิวแยก (`queue_name`)
+
+ARQ รองรับการ defer งานในตัวอยู่แล้วผ่าน `_defer_until` (เวลาที่แน่นอน) และ `_queue_name` (แยกคิว) ของ `pool.enqueue_job()` ไม่ต้องสร้างกลไก schedule เอง แค่เปิด parameter สองตัวนี้ออกมาที่ API:
+
+```python
+async def enqueue_job(pool, function, job_data, start_at=None, queue_name=None):
+    job = await pool.enqueue_job(function, job_data, _defer_until=start_at, _queue_name=queue_name)
+```
+
+`POST /jobs` จึงรับ `start_at` (ISO datetime, ไม่ระบุ = เริ่มทันที) และ `queue_name` (ไม่ระบุ = คิวมาตรฐานของ ARQ) เพิ่มจากเดิม — ใช้เวลา enqueue งานเทรนโมเดล (ดู `training/`) ที่ต้องแยกคิวจากงานเบาอื่นๆ และกำหนดเวลาเริ่มล่วงหน้าได้
+
+**สำคัญ:** ถ้า enqueue ด้วย `queue_name` ที่ไม่ใช่ค่า default ตอนเช็คสถานะที่ `GET /jobs/{job_id}` ต้องส่ง `queue_name` เดิมกลับมาด้วย (เป็น query param) ไม่งั้นจะหา job ไม่เจอ (404) เพราะ ARQ เก็บ job ไว้แยก namespace ตามชื่อคิว
+
 ## Endpoints
 
 | Method | Path | คำอธิบาย |
 |---|---|---|
-| POST | `/jobs` | ยิงงานเข้าคิว ระบุชื่อ function (ต้องตรงกับที่ลงทะเบียนไว้ใน `worker_settings.py`) + ข้อมูลงาน |
-| GET | `/jobs/{job_id}` | เช็คสถานะ/ผลลัพธ์ของงาน (404 ถ้าไม่พบ job) |
+| POST | `/jobs` | ยิงงานเข้าคิว ระบุชื่อ function (ต้องตรงกับที่ลงทะเบียนไว้ใน `worker_settings.py`) + ข้อมูลงาน + `start_at`/`queue_name` (optional) |
+| GET | `/jobs/{job_id}?queue_name=` | เช็คสถานะ/ผลลัพธ์ของงาน (404 ถ้าไม่พบ job หรือ queue_name ไม่ตรงกับตอน enqueue) |
 
 **หมายเหตุ:** endpoint นี้แค่ "ส่งงานเข้าคิว" เท่านั้น งานจะไม่ถูกประมวลผลจริงจนกว่าจะมี worker รันอยู่แยกต่างหาก:
 

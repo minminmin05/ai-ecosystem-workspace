@@ -75,6 +75,60 @@ services:
       retries: 5
     logging: *default-logging
 
+  fastapi:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: fastapi
+    restart: unless-stopped
+    environment:
+      HOST: 0.0.0.0
+      PORT: 8000
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      MINIO_ENDPOINT: minio:9000
+      MINIO_SECURE: "false"
+      LABELSTUDIO_URL: http://label-studio:8080
+    env_file:
+      - path: ./backend/.env
+        required: false
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
+      - redis
+      - minio
+      - label-studio
+    logging: *default-logging
+
+  trainer-worker:
+    build:
+      context: ./workers/trainer
+      dockerfile: Dockerfile
+    container_name: trainer-worker
+    restart: unless-stopped
+    environment:
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      MINIO_ENDPOINT: minio:9000
+      MINIO_SECURE: "false"
+    env_file:
+      - path: ./workers/trainer/.env
+        required: false
+    depends_on:
+      - redis
+      - minio
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    logging: *default-logging
+
 volumes:
   postgresql-data:
   redis-data:

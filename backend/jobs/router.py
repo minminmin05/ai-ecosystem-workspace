@@ -1,3 +1,5 @@
+from typing import Optional
+
 from arq import ArqRedis
 from fastapi import APIRouter, Depends, status
 
@@ -18,7 +20,13 @@ async def enqueue_job(
     data: JobEnqueueRequest,
     pool: ArqRedis = Depends(service.get_arq_pool),
 ) -> JobEnqueueResponse:
-    job_id = await service.enqueue_job(pool, data.function, data.job_data)
+    job_id = await service.enqueue_job(
+        pool,
+        data.function,
+        data.job_data,
+        start_at=data.start_at,
+        queue_name=data.queue_name,
+    )
     return JobEnqueueResponse(job_id=job_id)
 
 
@@ -29,6 +37,7 @@ async def enqueue_job(
 )
 async def get_job_status(
     job_id: str,
+    queue_name: Optional[str] = None,
     pool: ArqRedis = Depends(service.get_arq_pool),
 ) -> JobStatusOut:
-    return await service.get_job_status(pool, job_id)
+    return await service.get_job_status(pool, job_id, queue_name=queue_name)

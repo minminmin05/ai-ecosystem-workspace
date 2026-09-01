@@ -10,6 +10,7 @@ from jobs.router import router as jobs_router
 from jobs.service import create_arq_pool
 from storage.router import router as storage_router
 from storage.service import ensure_bucket
+from training.router import router as training_router
 
 
 tags_metadata = [
@@ -28,6 +29,10 @@ tags_metadata = [
     {
         "name": "jobs",
         "description": "ยิงงานเบื้องหลังเข้าคิวผ่าน ARQ/Redis แล้วเช็คสถานะ/ผลลัพธ์ทีหลัง",
+    },
+    {
+        "name": "training",
+        "description": "ดึง dataset จาก Hugging Face เข้า MinIO และเข้าคิวสั่งเทรนโมเดล token classification",
     },
 ]
 
@@ -64,6 +69,7 @@ app.include_router(db_router)
 app.include_router(storage_router)
 app.include_router(annotations_router)
 app.include_router(jobs_router)
+app.include_router(training_router)
 
 
 @app.get("/health", tags=["health"], summary="Health check")

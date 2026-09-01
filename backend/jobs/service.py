@@ -1,5 +1,9 @@
+from datetime import datetime
+from typing import Optional
+
 from arq import ArqRedis, create_pool
 from arq.connections import RedisSettings
+from arq.constants import default_queue_name
 from arq.jobs import Job, JobStatus
 from fastapi import HTTPException, Request, status
 
@@ -18,8 +22,19 @@ def get_arq_pool(request: Request) -> ArqRedis:
     return request.app.state.arq_pool
 
 
-async def enqueue_job(pool: ArqRedis, function: str, job_data: dict) -> str:
-    job = await pool.enqueue_job(function, job_data)
+async def enqueue_job(
+    pool: ArqRedis,
+    function: str,
+    job_data: dict,
+    start_at: Optional[datetime] = None,
+    queue_name: Optional[str] = None,
+) -> str:
+    job = await pool.enqueue_job(
+        function,
+        job_data,
+        _defer_until=start_at,
+        _queue_name=queue_name,
+    )
     if job is None:
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
@@ -28,8 +43,8 @@ async def enqueue_job(pool: ArqRedis, function: str, job_data: dict) -> str:
     return job.job_id
 
 
-async def get_job_status(pool: ArqRedis, job_id: str) -> dict:
-    job = Job(job_id, pool)
+async def get_job_status(pool: ArqRedis, job_id: str, queue_name: Optional[str] = None) -> dict:
+    job = Job(job_id, pool, _queue_name=queue_name or default_queue_name)
     job_status = await job.status()
     if job_status == JobStatus.not_found:
         raise HTTPException(

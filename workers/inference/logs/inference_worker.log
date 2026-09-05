@@ -1,0 +1,22 @@
+2026-09-05 07:30:43,490 | INFO     | inference_worker | กำลังโหลดโมเดลจาก MLflow: models:/token-classification-ner/latest
+2026-09-05 07:30:46,829 | INFO     | inference_worker | กำลังโหลดโมเดลจาก MLflow: models:/token-classification-ner/latest
+2026-09-05 07:30:51,005 | INFO     | inference_worker | กำลังโหลดโมเดลจาก MLflow: models:/token-classification-ner/latest
+2026-09-05 07:30:55,731 | INFO     | inference_worker | กำลังโหลดโมเดลจาก MLflow: models:/token-classification-ner/latest
+2026-09-05 07:31:01,142 | INFO     | inference_worker | กำลังโหลดโมเดลจาก MLflow: models:/token-classification-ner/latest
+2026-09-05 07:31:06,734 | INFO     | inference_worker | กำลังโหลดโมเดลจาก MLflow: models:/token-classification-ner/latest
+2026-09-05 07:31:13,672 | INFO     | inference_worker | กำลังโหลดโมเดลจาก MLflow: models:/token-classification-ner/latest
+2026-09-05 07:31:22,685 | INFO     | inference_worker | กำลังโหลดโมเดลจาก MLflow: models:/token-classification-ner/latest
+2026-09-05 07:31:38,709 | INFO     | inference_worker | กำลังโหลดโมเดลจาก MLflow: models:/token-classification-ner/latest
+2026-09-05 07:32:08,663 | INFO     | inference_worker | กำลังโหลดโมเดลจาก MLflow: models:/token-classification-ner/latest
+2026-09-05 07:33:05,099 | INFO     | inference_worker | กำลังโหลดโมเดลจาก MLflow: models:/token-classification-ner/latest
+2026-09-05 07:34:10,055 | INFO     | inference_worker | กำลังโหลดโมเดลจาก MLflow: models:/token-classification-ner/latest
+2026-09-05 07:35:15,394 | INFO     | inference_worker | กำลังโหลดโมเดลจาก MLflow: models:/token-classification-ner/latest
+2026-09-05 07:36:30,577 | INFO     | inference_worker | กำลังโหลดโมเดลจาก MLflow: models:/token-classification-ner/latest
+2026-09-05 07:37:38,654 | INFO     | inference_worker | กำลังโหลดโมเดลจาก MLflow: models:/token-classification-ner/latest
+2026-09-05 07:38:46,629 | INFO     | inference_worker | กำลังโหลดโมเดลจาก MLflow: models:/token-classification-ner/latest
+2026-09-05 07:39:59,992 | INFO     | inference_worker | กำลังโหลดโมเดลจาก MLflow: models:/token-classification-ner/latest
+2026-09-05 07:40:22,921 | INFO     | inference_worker | โหลดโมเดลสำเร็จ พร้อมรับงาน
+2026-09-05 07:40:41,961 | INFO     | inference_worker | กำลังโหลดโมเดลจาก MLflow: models:/token-classification-ner/latest
+2026-09-05 07:40:53,878 | INFO     | inference_worker | โหลดโมเดลสำเร็จ พร้อมรับงาน
+2026-09-05 07:41:18,508 | INFO     | inference_worker | ทำนาย text='Apple is looking at buying U.K. startup for $1 billion'
+2026-09-05 07:41:18,781 | INFO     | inference_worker | ผลลัพธ์: [{'word': 'apple', 'entity_group': 'B-ORG', 'score': 0.9765551686286926, 'start': 0, 'end': 5}, {'word': 'u', 'entity_group': 'B-LOC', 'score': 0.99299556016922, 'start': 27, 'end': 28}, {'word': '.', 'entity_group': 'I-LOC', 'score': 0.9911147356033325, 'start': 28, 'end': 29}, {'word': 'k', 'entity_group': 'I-LOC', 'score': 0.9907717704772949, 'start': 29, 'end': 30}, {'word': '.', 'entity_group': 'I-LOC', 'score': 0.9885270595550537, 'start': 30, 'end': 31}]

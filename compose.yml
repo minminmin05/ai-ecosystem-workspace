@@ -17,6 +17,7 @@ services:
       - "5432:5432"
     volumes:
       - postgresql-data:/var/lib/postgresql/data
+      - ./postgres-init:/docker-entrypoint-initdb.d
     logging: *default-logging
 
   redis:
@@ -103,6 +104,25 @@ services:
       - label-studio
     logging: *default-logging
 
+  mlflow:
+    build:
+      context: ./mlflow
+      dockerfile: Dockerfile
+    container_name: mlflow
+    restart: unless-stopped
+    environment:
+      MLFLOW_BACKEND_STORE_URI: postgresql://postgres:password@postgres:5432/mlflow
+      MLFLOW_ARTIFACT_ROOT: s3://ai-ecosystem/mlflow
+      MLFLOW_S3_ENDPOINT_URL: http://minio:9000
+      AWS_ACCESS_KEY_ID: minioadmin
+      AWS_SECRET_ACCESS_KEY: minioadmin
+    ports:
+      - "5000:5000"
+    depends_on:
+      - postgres
+      - minio
+    logging: *default-logging
+
   trainer-worker:
     build:
       context: ./workers/trainer
@@ -114,12 +134,17 @@ services:
       REDIS_PORT: 6379
       MINIO_ENDPOINT: minio:9000
       MINIO_SECURE: "false"
+      MLFLOW_TRACKING_URI: http://mlflow:5000
+      MLFLOW_S3_ENDPOINT_URL: http://minio:9000
+      AWS_ACCESS_KEY_ID: minioadmin
+      AWS_SECRET_ACCESS_KEY: minioadmin
     env_file:
       - path: ./workers/trainer/.env
         required: false
     depends_on:
       - redis
       - minio
+      - mlflow
     deploy:
       resources:
         reservations:
@@ -127,6 +152,27 @@ services:
             - driver: nvidia
               count: 1
               capabilities: [gpu]
+    logging: *default-logging
+
+  inference-worker:
+    build:
+      context: ./workers/inference
+      dockerfile: Dockerfile
+    container_name: inference-worker
+    restart: unless-stopped
+    environment:
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      MLFLOW_TRACKING_URI: http://mlflow:5000
+      MLFLOW_S3_ENDPOINT_URL: http://minio:9000
+      AWS_ACCESS_KEY_ID: minioadmin
+      AWS_SECRET_ACCESS_KEY: minioadmin
+    env_file:
+      - path: ./workers/inference/.env
+        required: false
+    depends_on:
+      - redis
+      - mlflow
     logging: *default-logging
 
 volumes:

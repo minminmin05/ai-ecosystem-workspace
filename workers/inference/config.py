@@ -5,12 +5,6 @@ class Settings(BaseSettings):
     redis_host: str = "localhost"
     redis_port: int = 6379
 
-    minio_endpoint: str = "localhost:9000"
-    minio_access_key: str = "minioadmin"
-    minio_secret_key: str = "minioadmin"
-    minio_bucket: str = "ai-ecosystem"
-    minio_secure: bool = False
-
     mlflow_tracking_uri: str = "http://localhost:5000"
     mlflow_model_name: str = "token-classification-ner"
 

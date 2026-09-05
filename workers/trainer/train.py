@@ -1,14 +1,12 @@
 import asyncio
 import shutil
-import tarfile
 import tempfile
 from pathlib import Path
 
 import evaluate
+import mlflow
 import numpy as np
 from datasets import load_from_disk
-from minio import Minio
-from minio.versioningconfig import ENABLED, VersioningConfig
 from transformers import (
     AutoModelForTokenClassification,
     AutoTokenizer,
@@ -16,6 +14,7 @@ from transformers import (
     Trainer,
     TrainerCallback,
     TrainingArguments,
+    pipeline,
 )
 
 from config import settings
@@ -24,13 +23,16 @@ from logger import get_logger
 
 MODEL_CHECKPOINT = "distilbert-base-uncased"
 DATASET_MINIO_PREFIX = "datasets/conll2003"
-MODEL_OBJECT_NAME = "models/token-classification/model.tar.gz"
+MLFLOW_EXPERIMENT_NAME = "token-classification"
 
 # mirror ของ dataset ที่ใช้ (lhoestq/conll2003) เก็บ ner_tags เป็น int ธรรมดา ไม่มี ClassLabel
 # metadata ติดมาด้วย เลยต้อง hardcode รายชื่อ label เอง — เรียงลำดับตรงกับ conll2003 ต้นฉบับ
 LABEL_NAMES = ["O", "B-PER", "I-PER", "B-ORG", "I-ORG", "B-LOC", "I-LOC", "B-MISC", "I-MISC"]
 
 logger = get_logger("trainer_worker")
+
+mlflow.set_tracking_uri(settings.mlflow_tracking_uri)
+mlflow.set_experiment(MLFLOW_EXPERIMENT_NAME)
 
 
 class _LoggingCallback(TrainerCallback):
@@ -39,15 +41,6 @@ class _LoggingCallback(TrainerCallback):
     def on_log(self, args, state, control, logs=None, **kwargs):
         if logs:
             logger.info(f"step={state.global_step} {logs}")
-
-
-def _minio_client() -> Minio:
-    return Minio(
-        settings.minio_endpoint,
-        access_key=settings.minio_access_key,
-        secret_key=settings.minio_secret_key,
-        secure=settings.minio_secure,
-    )
 
 
 def _s3_storage_options() -> dict:
@@ -161,25 +154,34 @@ def _train_sync(job_data: dict) -> dict:
     eval_result = trainer.evaluate()
     logger.info(f"เทรนเสร็จ train_loss={train_result.training_loss:.4f} eval={eval_result}")
 
-    save_dir = work_dir / "final"
-    trainer.save_model(str(save_dir))
-    tokenizer.save_pretrained(str(save_dir))
+    # ห่อโมเดล+tokenizer ที่เทรนเสร็จเป็น pipeline พร้อมใช้งานจริง (aggregation_strategy="simple"
+    # รวม subword token ที่ทำนายเป็น entity เดียวกันให้เป็นคำเต็มๆ) แล้ว log เข้า MLflow โดยตรง
+    # ไม่ save ลง disk/tar เองอีกต่อไป — mlflow.transformers.log_model() จัดการ serialize +
+    # อัปโหลดเข้า MinIO (ที่ตั้งเป็น artifact store ของ MLflow ไว้แล้ว) ให้ทั้งหมด
+    inference_pipeline = pipeline(
+        "token-classification",
+        model=trainer.model,
+        tokenizer=tokenizer,
+        aggregation_strategy="simple",
+    )
 
-    archive_path = work_dir / "model.tar.gz"
-    with tarfile.open(archive_path, "w:gz") as tar:
-        tar.add(save_dir, arcname=".")
-
-    client = _minio_client()
-    if not client.bucket_exists(settings.minio_bucket):
-        client.make_bucket(settings.minio_bucket)
-    client.set_bucket_versioning(settings.minio_bucket, VersioningConfig(ENABLED))
-
-    client.fput_object(settings.minio_bucket, MODEL_OBJECT_NAME, str(archive_path))
-    logger.info(f"อัปโหลดโมเดลไป MinIO: {MODEL_OBJECT_NAME} (bucket versioning เปิดอยู่ ทุกรอบเทรนได้ version ใหม่)")
+    with mlflow.start_run():
+        mlflow.log_params({"model_checkpoint": MODEL_CHECKPOINT, "epochs": epochs})
+        mlflow.log_metrics({k: v for k, v in eval_result.items() if isinstance(v, (int, float))})
+        mlflow.transformers.log_model(
+            transformers_model=inference_pipeline,
+            name="model",
+            registered_model_name=settings.mlflow_model_name,
+        )
+    logger.info(
+        f"log โมเดลเข้า MLflow สำเร็จ (experiment={MLFLOW_EXPERIMENT_NAME}, "
+        f"registered_model_name={settings.mlflow_model_name}) — MLflow Model Registry "
+        "จัดการ version ของโมเดลให้เองในตัว"
+    )
 
     shutil.rmtree(work_dir, ignore_errors=True)
 
-    return {"eval": eval_result, "model_object": MODEL_OBJECT_NAME}
+    return {"eval": eval_result, "registered_model_name": settings.mlflow_model_name}
 
 
 async def train_token_classification(ctx, job_data: dict) -> dict:

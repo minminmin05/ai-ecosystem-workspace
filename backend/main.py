@@ -6,6 +6,7 @@ from core.config import settings
 from annotations.router import router as annotations_router
 from db.router import router as db_router
 from db.service import Base, engine
+from inference.router import router as inference_router
 from jobs.router import router as jobs_router
 from jobs.service import create_arq_pool
 from storage.router import router as storage_router
@@ -33,6 +34,10 @@ tags_metadata = [
     {
         "name": "training",
         "description": "ดึง dataset จาก Hugging Face เข้า MinIO และเข้าคิวสั่งเทรนโมเดล token classification",
+    },
+    {
+        "name": "inference",
+        "description": "เข้าคิวสั่งทำนายด้วยโมเดลที่เทรนไว้ (โหลดจาก MLflow Model Registry)",
     },
 ]
 
@@ -70,6 +75,7 @@ app.include_router(storage_router)
 app.include_router(annotations_router)
 app.include_router(jobs_router)
 app.include_router(training_router)
+app.include_router(inference_router)
 
 
 @app.get("/health", tags=["health"], summary="Health check")
